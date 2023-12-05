@@ -1,1 +1,242 @@
-# arduino
+NO.07
+=====
+#include <LiquidCrystal.h><br>
+LiquidCrystal lcd(8, 9, 4, 5, 6, 7);<br>
+char KeyValue[]={'1','2','3','4','5','6','7','8','9','0'};<br>
+byte Row=0, Col=0;<br>
+void setup() {<br>
+  pinMode(10, INPUT); //R1: S1,S2,S3,S4 (1,2,3,A)  <br>                          
+  pinMode(11, INPUT_PULLUP); //R2: S5,S6,S7,S8 (4,5,6,B) <br>
+  pinMode(12, INPUT_PULLUP); //R3: S9, S10, S11,S12 (7,8,9,C)<br>
+  pinMode(13, INPUT_PULLUP); //R4: (*,0,#,D)<br>
+  pinMode(A0, OUTPUT); //A1, C1: S1,S5,S9 (1,4,7,*)<br>
+  pinMode(A1, OUTPUT); //A2, C2: S2,S6,S10 (2,5,8,0)<br>
+  pinMode(A2, OUTPUT); //A3, C3: S3,S7,S11 (3,6,9,#)<br>
+  pinMode(A3, OUTPUT); //A4, C4, S4,S8,S12 (*,0, #,D)<br>
+  //Pin left to right :R1 R2 R3 R4 C1 C2 C3 C4<br>
+  digitalWrite(A0,HIGH);<br>
+  digitalWrite(A1,HIGH);<br>
+  digitalWrite(A2,HIGH);<br>
+  digitalWrite(A3,HIGH);<br>
+  lcd.begin(16, 2);              // start the library<br>
+  lcd.setCursor(0,0);<br>
+  for(int i=0; i<3;i++)<br>
+  {<br>
+    lcd.print("Key Martrix Test");<br>
+    delay(1000);<br>
+    lcd.clear();<br>
+    delay(400);<br>
+  }<br>
+} <br>
+void loop() {<br>
+  // put your main code here, to run repeatedly:<br>
+  static int keypressedcount=0;<br>
+  byte keyindex=0;<br>
+  //if key is pressed in the first round scan, <br>
+  //then call keyscan() again to check if the key pressed in first round is actually pressed <br>
+  if(keyscan()==true) <br>
+  {<br>
+    keyindex=(Row-1)*4+Col;<br>
+    delay(5);<br>
+    if ((keyscan()==true) && (keyindex=(Row-1)*4+Col))<br>
+    {<br>
+      lcd.clear();<br>
+      lcd.setCursor(0,0);<br>
+      lcd.print("Row=");lcd.print(Row);<br>
+      lcd.print(",Col=");lcd.print(Col);<br>
+      if(keyindex<=9){<br>
+           lcd.setCursor(0,1);<br>
+           lcd.print(KeyValue[keyindex-1]);<br>
+        }else if(keyindex==10){<br>
+            lcd.setCursor(0,1);<br>
+            lcd.print(String(KeyValue[0])+String(KeyValue[9]));<br>
+          }else if(keyindex==11){<br>
+            lcd.setCursor(0,1);<br>
+            lcd.print(String(KeyValue[0])+String(KeyValue[0]));<br>
+           }else if(keyindex==12){<br>
+              lcd.setCursor(0,1);<br>
+            lcd.print(String(KeyValue[0])+String(KeyValue[1]));<br>
+           }else if(keyindex==13){<br>
+              lcd.setCursor(0,1);<br>
+              lcd.print(String(KeyValue[0])+String(KeyValue[2]));<br>
+              }else if(keyindex==14){<br>
+              lcd.setCursor(0,1);<br>
+              lcd.print(String(KeyValue[0])+String(KeyValue[3]));<br>
+              }else if(keyindex==15){<br>
+              lcd.setCursor(0,1);<br>
+              lcd.print(String(KeyValue[0])+String(KeyValue[4]));<br>
+              }else if(keyindex==16){<br>
+              lcd.setCursor(0,1);<br>
+              lcd.print(String(KeyValue[0])+String(KeyValue[5]));<br>
+              }<br>
+      digitalWrite(A0,LOW);<br>
+      digitalWrite(A1,LOW);<br>
+      digitalWrite(A2,LOW);<br>
+      digitalWrite(A3,LOW);<br>
+      delayMicroseconds(100);<br>
+     while( (digitalRead(10)==LOW) || (digitalRead(11)==LOW))<br>
+        ;  <br>
+    }<br>
+  } <br>
+}<br>
+bool keyscan( )<br>
+{<br>
+  Row=0;Col=0;<br>
+  bool keypressed = false;<br>
+  //scan col1<br>
+  digitalWrite(A0, LOW);<br>
+  digitalWrite(A1, HIGH);<br>
+  digitalWrite(A2, HIGH);<br>
+  digitalWrite(A3, HIGH);<br>
+  delayMicroseconds(100);<br>
+  //Read keys in row.1<br>
+  if(digitalRead(10)==LOW)<br>
+  {<br>
+      digitalWrite(A0, HIGH);<br>
+      Col=1;Row=1;<br>
+      keypressed = true;<br>
+      return(keypressed);<br>
+  }<br>
+  //Read keys in row.2<br>
+  if(digitalRead(11)==LOW)<br>
+  {<br>
+      digitalWrite(A0, HIGH);<br>
+      Col=1;Row=2;<br>
+      keypressed = true;<br>
+      return(keypressed);<br>
+  }<br>
+  //Read keys in row.3<br>
+  if(digitalRead(12)==LOW)<br>
+  {<br>
+      digitalWrite(A0, HIGH);<br>
+      Col=1;Row=3;<br>
+      keypressed = true;<br>
+      return(keypressed);<br>
+  }<br>
+  //Read keys in row.4<br>
+  if(digitalRead(13)==LOW)<br>
+  {<br>
+       digitalWrite(A0, HIGH);<br>
+      Col=1;Row=4;<br>
+      keypressed = true;<br>
+      return(keypressed);<br>
+  }<br>
+  //scan col 2<br>  
+  digitalWrite(A0, HIGH);<br>
+  digitalWrite(A1, LOW);<br>
+  digitalWrite(A2, HIGH);<br>
+  digitalWrite(A3, HIGH);<br>
+  delayMicroseconds(100);<br>
+  //Read keys in row.1<br>
+  if(digitalRead(10)==LOW)<br>
+  {<br>
+      digitalWrite(A1, HIGH);<br>
+      Col=2;Row=1;<br>
+      keypressed = true;<br>
+      return(keypressed);<br>
+  }<br>
+    //Read keys in row.2<br>
+  if(digitalRead(11)==LOW)<br>
+  {<br>
+      digitalWrite(A1, HIGH);<br>
+      Col=2;Row=2;<br>
+      keypressed = true;<br>
+      return(keypressed);<br>
+  }<br>
+  //Read keys in row.3<br>
+  if(digitalRead(12)==LOW)<br>
+  {<br>
+      digitalWrite(A1, HIGH);<br>
+      Col=2;Row=3;<br>
+      keypressed = true;<br>
+      return(keypressed);<br>
+  }<br>
+  //Read keys in row.4<br>
+  if(digitalRead(13)==LOW)<br>
+  {<br>
+      digitalWrite(A1, HIGH);<br>
+      Col=2;Row=4;<br>
+      keypressed = true;<br>
+      lcd.print(String(KeyValue[0]) + String(KeyValue[4]));<br>
+      return(keypressed);<br>
+  }<br>
+  //scan col 3 <br>  
+  digitalWrite(A0, HIGH);<br>
+  digitalWrite(A1, HIGH);<br>
+  digitalWrite(A2, LOW);<br>
+  digitalWrite(A3, HIGH);<br>
+  delayMicroseconds(100);<br>
+  //Read keys in row.1<br>
+  if(digitalRead(10)==LOW)<br>
+  {<br>
+      digitalWrite(A2, HIGH);<br>
+      Col=3;Row=1;<br>
+      keypressed = true;<br>
+      return(keypressed);<br>
+  }<br>
+  //Read keys in row.2<br>
+  if(digitalRead(11)==LOW)<br>
+  {<br>
+      digitalWrite(A2, HIGH);<br>
+      Col=3;Row=2;<br>
+      keypressed = true;<br>
+      return(keypressed);<br>
+  }  <br>
+  //Read keys in row.3<br>
+  if(digitalRead(12)==LOW)<br>
+  {<br>
+      digitalWrite(A2, HIGH);<br>
+      Col=3;Row=3;<br>
+      keypressed = true;<br>
+      return(keypressed);<br>
+  }<br>
+  //Read keys in row.4<br>
+  if(digitalRead(13)==LOW)<br>
+  {<br>
+      digitalWrite(A2, HIGH);<br>
+      Col=3;Row=4;<br>
+      keypressed = true;<br>
+      return(keypressed);<br>
+  }<br>
+  
+  //scan col 4<br>  
+  digitalWrite(A0, HIGH);<br>
+  digitalWrite(A1, HIGH);<br>
+  digitalWrite(A2, HIGH);<br>
+  digitalWrite(A3, LOW);<br>
+  delayMicroseconds(100);<br>
+  //Read keys in row.1<br>
+  if(digitalRead(10)==LOW)<br>
+  {<br>
+      digitalWrite(A3, HIGH);<br>
+      Col=4;Row=1;<br>
+      keypressed = true;<br>
+      return(keypressed);<br>
+  }<br>
+    //Read keys in row.2<br>
+  if(digitalRead(11)==LOW)<br>
+  {<br>
+      digitalWrite(A3, HIGH);<br>
+      Col=4;Row=2;<br>
+      keypressed = true;<br>
+      return(keypressed);<br>
+  }<br>
+  //Read keys in row.3<br>
+  if(digitalRead(12)==LOW)<br>
+  {<br>
+      digitalWrite(A3, HIGH);<br>
+      Col=4;Row=3;<br>
+      keypressed = true;<br>
+      return(keypressed);<br>
+  }<br>
+  //Read keys in row.4<br>
+  if(digitalRead(13)==LOW)<br>
+  {<br>
+      digitalWrite(A3, HIGH);<br>
+      Col=4;Row=4;<br>
+      keypressed = true;<br>
+      return(keypressed);<br>
+  }<br>
+  return(false);<br>
+}<br>
+
