@@ -1,4 +1,4 @@
-NO.07
+NO.04
 =====
 #include <LiquidCrystal.h><br>
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);<br>
