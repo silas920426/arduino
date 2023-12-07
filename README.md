@@ -403,3 +403,26 @@ shiftOut(DATA_DIO, CLK_DIO, MSBFIRST, SEGMENT_MAP[Value]);
 shiftOut(DATA_DIO, CLK_DIO, MSBFIRST, SEGMENT_SELECT[Segment] );
 digitalWrite(LATCH_DIO,HIGH);
 }
+******************************************************************************************
+No.03
+=====
+#include <LiquidCrystal.h>
+
+LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
+
+void setup() {
+  pinMode(BT1, INPUT);
+  pinMode(BT2, INPUT);
+  pinMode(BT3, INPUT);
+  pinMode(BT4, INPUT);
+
+}
+int buttonState1,buttonState2,buttonState3,buttonState4 = 0;                                                 
+int delay_number = 100;
+
+void loop() {
+  lcd.begin(16, 2);
+  lcd.setCursor(0, 1);
+  lcd.print("Andes Hello");
+
+}
