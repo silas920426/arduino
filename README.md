@@ -472,3 +472,48 @@ void playNote(int OutputPin, char note, unsigned long duration) {
     }
   }
 }
+-------------------------------------------------------------------------
+No.05
+============
+#include <LiquidCrystal.h>
+#include <Wire.h>
+LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
+
+void setup() {
+  pinMode(BT1, INPUT);
+  pinMode(BT2, INPUT);
+  pinMode(BT3, INPUT);
+}
+int buttonState1,buttonState2,buttonState3,buttonState4 = 0;                                                 
+int delay_number = 100;
+int year=2020,month=12,d=25,h=12,m=59,s=55;
+void loop() {
+  lcd.clear();
+  lcd.begin(16, 2);
+  lcd.setCursor(0,0);
+  lcd.print(year);
+  lcd.print("/");
+  lcd.print(month);
+  lcd.print("/");
+  lcd.print(d);
+  lcd.setCursor(0,1);
+  lcd.print(h);
+  lcd.print(":");
+  lcd.print(m);
+  lcd.print(":");
+  lcd.print(s);
+  delay(1000);
+  if(s==59){
+    s=0;
+    if(m==59){
+      m=0;
+      if(h==23){
+        h=0;
+        d++;
+      }else
+        h++;
+      }else
+        m++;
+      }else 
+        s++;
+}
